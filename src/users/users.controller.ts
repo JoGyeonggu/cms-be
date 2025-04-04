@@ -25,4 +25,12 @@ export class UsersController {
   remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(+id);
   }
+
+  @Post(':id/role')
+  assignRole(
+    @Param('id') id: string,
+    @Body() body: { roleId: number },
+  ): Promise<User> {
+    return this.usersService.assignRole(+id, body.roleId);
+  }
 }

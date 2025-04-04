@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
-import { RolesModule } from './roles/roles.module';
+import { MenusModule } from './menus/menus.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { RolesModule } from './roles/roles.module';
+import { UsersModule } from './users/users.module';
+import { BoardsModule } from './boards/boards.module';
+import { PostsModule } from './posts/posts.module';
+import { AttachmentsModule } from './attachments/attachments.module';
 
 @Module({
   imports: [
@@ -19,6 +23,10 @@ import { PermissionsModule } from './permissions/permissions.module';
     UsersModule,
     RolesModule,
     PermissionsModule,
+    MenusModule,
+    BoardsModule,
+    PostsModule,
+    AttachmentsModule,
   ],
 })
 export class AppModule {}

@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Menu } from 'src/menus/menu.entity';
 import { PermissionsService } from 'src/permissions/permissions.service';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Role } from './role.entity';
 
 @Injectable()
@@ -9,6 +10,8 @@ export class RolesService {
   constructor(
     @InjectRepository(Role)
     private rolesRepository: Repository<Role>,
+    @InjectRepository(Menu)
+    private menuRepository: Repository<Menu>,
     private permissionsService: PermissionsService,
   ) {}
 
@@ -44,6 +47,22 @@ export class RolesService {
 
     const permissions = await this.permissionsService.findByIds(permissionIds);
     role.permissions = permissions;
+
+    return this.rolesRepository.save(role);
+  }
+
+  async assignMenus(roleId: number, menuIds: number[]): Promise<Role> {
+    const role = await this.rolesRepository.findOne({
+      where: { id: roleId },
+      relations: ['menus'],
+    });
+
+    if (!role) {
+      throw new NotFoundException(`Role with id ${roleId} not found`);
+    }
+
+    const menus = await this.menuRepository.findBy({ id: In(menuIds) });
+    role.menus = menus;
 
     return this.rolesRepository.save(role);
   }

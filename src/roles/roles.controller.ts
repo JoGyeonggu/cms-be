@@ -33,4 +33,12 @@ export class RolesController {
   ): Promise<Role> {
     return this.rolesService.assignPermissions(+id, body.permissionIds);
   }
+
+  @Post(':id/menus')
+  assignMenus(
+    @Param('id') id: string,
+    @Body() body: { menuIds: number[] },
+  ): Promise<Role> {
+    return this.rolesService.assignMenus(+id, body.menuIds);
+  }
 }
