@@ -32,4 +32,7 @@ export class Post {
 
   @UpdateDateColumn({ comment: '수정일시' })
   updatedAt: Date;
+
+  @Column({ nullable: true, comment: '첨부파일 그룹 ID' })
+  attachmentGroupId?: string;
 }
