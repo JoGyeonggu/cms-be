@@ -21,10 +21,10 @@ export class Post {
   @Column({ type: 'text', comment: '게시글 본문' })
   content: string;
 
-  @ManyToOne(() => Board, (board: Board) => board.posts)
+  @ManyToOne(() => Board, (board: Board) => board.posts, { eager: false })
   board: Board;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user: User) => user.posts, { eager: false })
   author: User;
 
   @CreateDateColumn({ comment: '작성일시' })

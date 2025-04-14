@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { Board } from '../boards/board.entity';
 import { User } from '../users/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -17,10 +17,29 @@ export class PostsService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  findAll(): Promise<Post[]> {
-    return this.postRepo.find({
+  async findAll(boardCode?: string, page = 1, limit = 10, keyword?: string) {
+    const where: FindOptionsWhere<Post> = {};
+
+    if (boardCode) {
+      where.board = { code: boardCode } as unknown as Board;
+    }
+    if (keyword) {
+      where.title = ILike(`%${keyword}%`);
+    }
+
+    const [data, total] = await this.postRepo.findAndCount({
       relations: ['board', 'author'],
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
     });
+    return {
+      data,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: number): Promise<Post> {

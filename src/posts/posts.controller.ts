@@ -6,6 +6,7 @@ import {
   Post as HttpPost,
   Param,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post as PostEntity } from './post.entity';
@@ -16,8 +17,16 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  findAll(): Promise<PostEntity[]> {
-    return this.postsService.findAll();
+  findAll(
+    @Query('board') boardCode?: string,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+  ) {
+    return this.postsService.findAll(
+      boardCode,
+      parseInt(page),
+      parseInt(limit),
+    );
   }
 
   @Get(':id')
