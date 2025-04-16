@@ -134,7 +134,6 @@ export class PostsService {
   }
 
   async removeAttachment(attachmentId: number): Promise<void> {
-    console.log('🗑 삭제 요청:', attachmentId);
     const attachment = await this.attachmentRepo.findOneBy({
       id: attachmentId,
     });
